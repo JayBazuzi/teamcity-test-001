@@ -1,4 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
+import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.powerShell
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.buildReportTab
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
@@ -61,6 +62,15 @@ object MachineSetup_Build : BuildType({
 
     vcs {
         root(MachineSetup_HttpsGithubComJayBazuziMachineSetupRefsHeadsMain)
+    }
+
+    steps {
+        powerShell {
+            scriptMode = file {
+                path = "windows.ps1"
+            }
+            noProfile = false
+        }
     }
 
     triggers {
