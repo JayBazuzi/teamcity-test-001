@@ -1,5 +1,7 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.buildReportTab
+import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -41,4 +43,39 @@ project {
             preventDependencyCleanup = false
         }
     }
+
+    subProject(MachineSetup)
 }
+
+
+object MachineSetup : Project({
+    name = "Machine Setup"
+
+    vcsRoot(MachineSetup_HttpsGithubComJayBazuziMachineSetupRefsHeadsMain)
+
+    buildType(MachineSetup_Build)
+})
+
+object MachineSetup_Build : BuildType({
+    name = "Build"
+
+    vcs {
+        root(MachineSetup_HttpsGithubComJayBazuziMachineSetupRefsHeadsMain)
+    }
+
+    triggers {
+        vcs {
+        }
+    }
+})
+
+object MachineSetup_HttpsGithubComJayBazuziMachineSetupRefsHeadsMain : GitVcsRoot({
+    name = "https://github.com/JayBazuzi/machine-setup#refs/heads/main"
+    url = "https://github.com/JayBazuzi/machine-setup"
+    branch = "refs/heads/main"
+    branchSpec = "refs/heads/*"
+    authMethod = password {
+        userName = "jaybazuzi"
+        password = "credentialsJSON:79666d3b-6a19-49ed-bddf-6eab55b15147"
+    }
+})
